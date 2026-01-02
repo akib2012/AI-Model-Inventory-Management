@@ -1,0 +1,27 @@
+@import "tailwindcss";
+/* @custom-variant dark (&:where(.dark, .dark *)); */
+/* @plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+@custom-variant dark (&:where([data-theme=light], [data-theme=light] *));
+ */
+  @plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+  themes: light --default;
+ }
+
+
+
+ .active{
+    @apply text-[#22D3EE] underline
+ }
+
+
+ body {
+  font-family: "Roboto Slab", serif;
+  font-optical-sizing: auto;
+  
+}
+
+ 
