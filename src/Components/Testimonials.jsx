@@ -32,7 +32,7 @@ const Testimonials = () => {
             key={i}
             data-aos="zoom-in"
             className="
-              bg-white p-8 rounded-2xl shadow-lg
+              bg-gray-300 p-8 rounded-2xl shadow-lg
               hover:shadow-[0_20px_40px_rgba(15,118,110,0.35)]
               hover:-translate-y-2 hover:scale-[1.03]
               transition-all duration-300

@@ -31,7 +31,7 @@ const Purchase = () => {
 
   return (
     <div>
-      <h4 className="text-center text-black text-3xl font-bold py-6">
+      <h4 className="text-center text-[#0F766E] text-3xl font-bold py-6">
         🛒 My Purchases{" "}
       </h4>
 

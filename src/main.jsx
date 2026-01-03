@@ -5,14 +5,14 @@ import { RouterProvider } from "react-router";
 import router from "./Router/Router";
 import AuthProvide from "./ContextAuth/AuthProvide";
 import { ToastContainer } from "react-toastify";
-import { ThemeProvider } from "next-themes";
+// import { ThemeProvider } from "next-themes";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="light">
+    {/* <ThemeProvider   attribute="data-theme" defaultTheme="light"> */}
       <AuthProvide>
         <RouterProvider router={router}></RouterProvider> <ToastContainer />
       </AuthProvide>
-    </ThemeProvider>
+    {/* </ThemeProvider> */}
   </StrictMode>
 );

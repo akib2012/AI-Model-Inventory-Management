@@ -40,7 +40,7 @@ const ModelStats = () => {
             key={i}
             data-aos="flip-up"
             className="
-              relative bg-white/70 backdrop-blur-lg 
+              relative bg-gray-300 backdrop-blur-lg 
               p-8 rounded-2xl shadow-lg
               hover:shadow-[0_20px_40px_rgba(15,118,110,0.35)]
               hover:-translate-y-2 hover:scale-[1.03]

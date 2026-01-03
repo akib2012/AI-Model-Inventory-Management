@@ -7,10 +7,10 @@ const CTASection = () => {
       data-aos="zoom-in-up"
       className="max-w-10/12 m-auto mb-7 py-12 text-center bg-[#0F766E]/20 backdrop-blur-xl rounded-3xl p-10"
     >
-      <h3 className="text-3xl md:text-4xl font-bold text-[#ECFEFF] mb-6">
+      <h3 className="text-3xl md:text-4xl font-bold text-[#0F766E] mb-6">
          Ready to Explore AI Models?
       </h3>
-      <p className="text-gray-200 mb-6">
+      <p className="text-[#0F766E] font-bold mb-6">
         Sign up now to manage, add, and purchase AI models like a pro!
       </p>
       <Link

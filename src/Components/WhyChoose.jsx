@@ -21,7 +21,7 @@ const WhyChoose = () => {
             key={i}
             data-aos="fade-up"
             className="
-              bg-white
+              bg-gray-300
               p-6 rounded-2xl
               shadow-lg
               hover:shadow-[0_15px_30px_rgba(15,118,110,0.35)]

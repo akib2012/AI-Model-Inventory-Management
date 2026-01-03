@@ -21,7 +21,7 @@ const HowItWorks = () => {
             key={i}
             data-aos="zoom-in"
             className="
-              bg-white
+              bg-gray-300
               p-6 rounded-2xl
               shadow-lg
               hover:shadow-[0_20px_40px_rgba(15,118,110,0.35)]

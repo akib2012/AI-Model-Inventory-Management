@@ -35,13 +35,13 @@ const MyModels = () => {
 
   return (
     <div className="max-w-10/12 m-auto rounded-2xl my-6 px-4">
-      <h4 className="text-center text-3xl font-bold py-6 text-black">
+      <h4 className="text-center text-3xl font-bold py-6 text-[#0F766E]">
         My Model{" "}
       </h4>
 
       {mymodel.length === 0 ? (
         <div>
-          <h3 className="text-center text-2xl text-white">No model found 😢</h3>
+          <h3 className="text-center text-2xl text-[#0F766E]">No model found 😢</h3>
         </div>
       ) : (
         mymodel.map((model) => (
