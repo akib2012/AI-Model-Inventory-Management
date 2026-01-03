@@ -35,7 +35,7 @@ const Purchase = () => {
         🛒 My Purchases{" "}
       </h4>
 
-      <div className="max-w-10/12 m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-11 gap-x-5 my-13 pb-6">
+      <div className="max-w-10/12 m-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-y-11 gap-x-5 my-13 pb-6">
         {purchase.map((p) => (
           <MyPurchase p={p} key={p._id}></MyPurchase>
         ))}

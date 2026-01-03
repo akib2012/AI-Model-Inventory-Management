@@ -13,6 +13,7 @@ import MyModels from "../Pages/MyModels";
 import Purchase from "../Pages/Purchase";
 import Editpage from "../Pages/Editpage";
 import Errorpage from "../Pages/Errorpage";
+import DeshboardLayout from "../Layout/DeshboardLayout";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,17 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path:"/deshboard",
+    element: <PrivateRoute><DeshboardLayout></DeshboardLayout></PrivateRoute>,
+    children: [
+      {
+       
+      }
+    ]
+
+
+  }
 ]);
 
 export default router;

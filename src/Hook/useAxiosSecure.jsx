@@ -1,0 +1,57 @@
+// https://ai-model-inventory-manager-server-ten.vercel.app
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import axios from "axios";
+import useAuth from "./useAuth";
+// import useAuth from "./useAuth";
+
+const axiosInstance = axios.create({
+  baseURL: "https://ai-model-inventory-manager-server-ten.vercel.app",
+  // baseURL: "http://localhost:3000",
+  withCredentials: true,
+});
+
+const useAxiosSecure = () => {
+  const { user, logOut, loading } = useAuth();
+  const navigate = useNavigate();
+
+  // console.log(user.accessToken);
+
+  useEffect(() => {
+    if (!loading && user?.accessToken) {
+      const requestInterceptor = axiosInstance.interceptors.request.use(
+        (config) => {
+          config.headers.Authorization = `Bearer ${user.accessToken}`;
+          return config;
+        }
+      );
+
+      // Add response interceptor
+      const responseInterceptor = axiosInstance.interceptors.response.use(
+        (res) => res,
+        (err) => {
+          if (err?.response?.status === 401 || err?.response?.status === 403) {
+            logOut()
+              .then(() => {
+                console.log("Logged out successfully.");
+              })
+              .catch(console.error);
+            navigate("/login");
+          }
+          return Promise.reject(err);
+        }
+      );
+
+      // Cleanup to prevent multiple interceptors on re-renders
+      return () => {
+        axiosInstance.interceptors.request.eject(requestInterceptor);
+        axiosInstance.interceptors.response.eject(responseInterceptor);
+      };
+    }
+  }, [user, loading, logOut, navigate]);
+
+  return axiosInstance;
+};
+export default useAxiosSecure;
+
+

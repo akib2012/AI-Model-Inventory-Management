@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ModelCard from "./ModelCard";
+// import Authcontext from "../ContextAuth/Authcontext";
+
+// import useAuth from "../Hook/useRole";
 
 const RecentModel = () => {
   const [models, setModels] = useState([]);
+  // const {user} = useContext(Authcontext)
 
   useEffect(() => {
     fetch(
@@ -15,6 +19,7 @@ const RecentModel = () => {
       })
       .catch((err) => console.error("Error fetching recent models:", err));
   }, []);
+  // console.log(user);
 
   return (
     <div>

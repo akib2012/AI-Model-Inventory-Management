@@ -115,7 +115,10 @@ const ViewsAllModels = () => {
 
         <button
           type="submit"
-          className="w-full sm:w-auto rounded-full bg-blue-600 text-white px-6 py-2 hover:bg-blue-700 transition font-medium"
+          className="px-6 py-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0F766E]
+              shadow-lg
+              hover:from-[#1D4ED8] hover:to-[#0D9488]
+              hover:shadow-2xl text-white"
         >
           {loading ? "Searching..." : "Search"}
         </button>
