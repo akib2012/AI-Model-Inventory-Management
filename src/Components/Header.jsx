@@ -26,32 +26,28 @@ const Header = () => {
     singout().catch((error) => console.log(error));
   };
 
-  /* 🔹 COMMON NAV LINKS */
+  /* 🔹 NAV LINKS */
   const navLinks = (
     <>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
-      <li>
-        <NavLink to="/addmodel">Add Model</NavLink>
-      </li>
-      <li>
-        <NavLink to="/viewsallmodels">View Model</NavLink>
-      </li>
+      <li><NavLink to="/">Home</NavLink></li>
+      <li><NavLink to="/addmodel">Add Model</NavLink></li>
+      <li><NavLink to="/viewsallmodels">View Model</NavLink></li>
 
       {user && (
         <>
-          <li>
-            <NavLink to="/my-Purchase">Model Purchase</NavLink>
-          </li>
-          <li>
-            <NavLink to="/my-models">My Models</NavLink>
-          </li>
+          <li><NavLink to="/my-Purchase">Model Purchase</NavLink></li>
+          <li><NavLink to="/my-models">My Models</NavLink></li>
         </>
       )}
 
-      {/* 🔥 MOBILE ONLY LOGOUT / LOGIN */}
-      <li className="lg:hidden mt-2 border-t border-gray-600 pt-2">
+      {/* 🔥 MOBILE + TABLET THEME TOGGLE */}
+      <li className="lg:hidden flex items-center justify-between mt-3 pt-3 border-t border-gray-600">
+        <span className="text-sm">Theme</span>
+        <ThemeToggle />
+      </li>
+
+      {/* 🔥 MOBILE LOGIN / LOGOUT */}
+      <li className="lg:hidden mt-3">
         {user ? (
           <button
             onClick={handlelogout}
@@ -82,25 +78,17 @@ const Header = () => {
             {/* MOBILE MENU */}
             <div className="dropdown">
               <div tabIndex={0} className="btn btn-ghost lg:hidden">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h8m-8 6h16"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                    d="M4 6h16M4 12h8m-8 6h16" />
                 </svg>
               </div>
 
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-[#1E3A8A] rounded-xl mt-3 w-56 p-3 shadow-lg z-50"
+                className="menu menu-sm dropdown-content bg-[#1E3A8A]
+                rounded-xl mt-3 w-56 p-3 shadow-lg z-50"
               >
                 {navLinks}
               </ul>
@@ -109,10 +97,7 @@ const Header = () => {
             {/* LOGO */}
             <div className="flex items-center gap-2">
               <img src={logoimg} className="w-10 h-10 rounded-full" />
-              <Link
-                to="/"
-                className="hidden md:block text-xl font-semibold"
-              >
+              <Link to="/" className="hidden md:block text-xl font-semibold">
                 ModelTrack AI
               </Link>
             </div>
@@ -127,7 +112,6 @@ const Header = () => {
 
           {/* RIGHT (DESKTOP ONLY) */}
           <div className="navbar-end hidden lg:flex items-center gap-4">
-
             <ThemeToggle />
 
             {user ? (
@@ -159,7 +143,6 @@ const Header = () => {
                   )}
                 </div>
 
-                {/* DESKTOP LOGOUT */}
                 <button
                   onClick={handlelogout}
                   className="px-6 py-2 rounded-xl bg-[#0528f2] hover:bg-[#274bfa]"
@@ -170,7 +153,8 @@ const Header = () => {
             ) : (
               <Link
                 to="/login"
-                className="px-6 py-2 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0F766E]"
+                className="px-6 py-2 rounded-xl bg-gradient-to-r
+                from-[#2563EB] to-[#0F766E]"
               >
                 Login
               </Link>
@@ -179,7 +163,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* OFFSET FOR FIXED NAVBAR */}
+      {/* OFFSET */}
       <div className="pt-20"></div>
     </>
   );

@@ -38,6 +38,8 @@ const Register = () => {
               user_name: name,
               user_mail: email,
               user_photo: photo,
+              role: "user",
+              createdat: new Date(),
             };
 
             // Send user to backend

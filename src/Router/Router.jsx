@@ -14,6 +14,9 @@ import Purchase from "../Pages/Purchase";
 import Editpage from "../Pages/Editpage";
 import Errorpage from "../Pages/Errorpage";
 import DeshboardLayout from "../Layout/DeshboardLayout";
+import DeshboardHome from "../Pages/DeshboardHome";
+import UserMymodels from "../Components/useroverviews/UserMymodels";
+import UserMyPurchases from "../Components/useroverviews/UserMypuchage";
 
 const router = createBrowserRouter([
   {
@@ -94,8 +97,20 @@ const router = createBrowserRouter([
     element: <PrivateRoute><DeshboardLayout></DeshboardLayout></PrivateRoute>,
     children: [
       {
+        index: true,
+        element: <DeshboardHome></DeshboardHome>,
+        
        
+      },
+      {
+        path: '/deshboard/my-models',
+        element: <UserMymodels></UserMymodels>
+      },
+      {
+        path: '/deshboard/purchases',
+        element: <UserMyPurchases></UserMyPurchases>
       }
+      
     ]
 
 

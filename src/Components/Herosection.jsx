@@ -11,7 +11,7 @@ import Slide3 from "./Slide3";
 
 const Herosection = () => {
   return (
-    <div className="max-w-full md:max-w-4xl lg:max-w-10/12 mx-auto h-[420px] shadow-md border border-gray-200 rounded-lg overflow-hidden">
+    <div className="max-w-full md:max-w-4xl lg:max-w-10/12 mx-auto h-fit shadow-md border border-gray-200 rounded-lg overflow-hidden">
       <Swiper
         spaceBetween={30}
         centeredSlides
