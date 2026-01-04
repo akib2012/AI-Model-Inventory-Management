@@ -37,11 +37,11 @@ const DashboardLayout = () => {
 
             <Link to="/" className="btn btn-ghost gap-2">
               <FiHome />
-              <span className="hidden sm:inline">Home</span>
+              <span className="hidden text-2xl text-[#0F766E]  sm:inline">Home</span>
             </Link>
           </div>
 
-          <div className="flex-1 px-4 font-semibold">Dashboard</div>
+          <div className="flex-1 px-4 text-[#0F766E] font-semibold">ModelTrack AI Dashboard</div>
 
           <div className="flex items-center gap-3">
             <ThemeToggle />

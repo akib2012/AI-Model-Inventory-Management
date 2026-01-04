@@ -5,7 +5,7 @@ import Dashboard from '../Components/useroverviews/Dashboard';
 const DeshboardHome = () => {
     return (
         <div>
-            <h3>this is deshboard home page</h3>
+            {/* <h3>this is deshboard home page</h3> */}
             <Userbarchart></Userbarchart>
 
             <Dashboard></Dashboard>

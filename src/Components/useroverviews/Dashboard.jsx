@@ -37,27 +37,47 @@ const Dashboard = () => {
       </div>
 
       {/* 🔹 Dynamic Table */}
-      <div className="bg-white rounded-xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Recent Models</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+        <h2 className="text-xl font-semibold mb-4 text-[#0F766E] dark:text-[#0F766E]">
+          Recent Models
+        </h2>
 
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-3">Model Name</th>
-              <th className="p-3">Category</th>
-              <th className="p-3">Created By</th>
-            </tr>
-          </thead>
-          <tbody>
-            {models.map((model) => (
-              <tr key={model._id} className="border-t">
-                <td className="p-3">{model.name}</td>
-                <td className="p-3">{model.framework}</td>
-                <td className="p-3">{model.createdBy}</td>
+        {/* 🔹 Responsive wrapper */}
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[600px] border-collapse">
+            <thead>
+              <tr className="bg-gray-100 dark:bg-gray-700 text-left">
+                <th className="p-3 text-gray-700 dark:text-gray-200">
+                  Model Name
+                </th>
+                <th className="p-3 text-gray-700 dark:text-gray-200">
+                  Category
+                </th>
+                <th className="p-3 text-gray-700 dark:text-gray-200">
+                  Created By
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {models.map((model) => (
+                <tr
+                  key={model._id}
+                  className="border-t border-gray-200 dark:border-gray-600"
+                >
+                  <td className="p-3 text-gray-800 dark:text-gray-100">
+                    {model.name}
+                  </td>
+                  <td className="p-3 text-gray-800 dark:text-gray-100">
+                    {model.framework}
+                  </td>
+                  <td className="p-3 text-gray-800 dark:text-gray-100">
+                    {model.createdBy}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
