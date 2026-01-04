@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, Outlet } from "react-router";
 import {
   FiMenu,
@@ -9,8 +9,14 @@ import {
   FiLogOut
 } from "react-icons/fi";
 import ThemeToggle from "../Components/ThemeToggle";
+import Authcontext from "../ContextAuth/Authcontext";
 
 const DashboardLayout = () => {
+  const { user, singout, loading } = useContext(Authcontext);
+  const handlelogout = () => {
+    singout().catch((error) => console.log(error));
+  };
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -49,17 +55,17 @@ const DashboardLayout = () => {
                 className="menu dropdown-content mt-3 w-44 bg-base-100 shadow rounded-box"
               >
                 <li>
-                  <Link to="/profile">
+                  <Link to="/deshboard/profile">
                     <FiUser /> Profile
                   </Link>
                 </li>
                 <li>
-                  <Link to="/dashboard">
+                  <Link to="/deshboard">
                     <FiHome /> Dashboard Home
                   </Link>
                 </li>
                 <li>
-                  <button>
+                  <button onClick={handlelogout}>
                     <FiLogOut /> Logout
                   </button>
                 </li>
@@ -115,7 +121,7 @@ const DashboardLayout = () => {
               </Link>
             </li>
 
-            {/* <li>
+            <li>
               <Link
                 to="/deshboard/purchases"
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center gap-4"
@@ -126,7 +132,7 @@ const DashboardLayout = () => {
                   My Purchases
                 </span>
               </Link>
-            </li> */}
+            </li>
 
           </ul>
         </div>

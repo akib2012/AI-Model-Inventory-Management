@@ -1,64 +1,80 @@
-import React, { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
+import Authcontext from "../../ContextAuth/Authcontext";
+import LoadingSpinner from "../LoadingSpinner";
 
 const UserMyPurchases = () => {
-  const [models, setModels] = useState([]);
-  const [count, setCount] = useState(0);
+  const { user } = useContext(Authcontext);
+
+  const [purchases, setPurchases] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken(); // Firebase JWT
+    if (!user?.accessToken || !user?.email) return;
 
-        // Fetch user's purchased models
-        const res = await fetch("http://localhost:3000/my-purchases", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        setModels(data.models);
-        setCount(data.count);
+    setLoading(true);
+
+    fetch(
+      `https://ai-model-inventory-manager-server-ten.vercel.app/my-Purchase?email=${user.email}`,
+      {
+        headers: {
+          authorization: `Bearer ${user.accessToken}`,
+        },
       }
-    });
-  }, []);
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Purchase API response >>", data);
+
+        
+        setPurchases(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching purchases:", err);
+        setLoading(false);
+      });
+  }, [user?.accessToken, user?.email]);
+
+  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">
-        You have purchased {count} model{count !== 1 ? "s" : ""}
+        You have purchased {purchases.length} model
+        {purchases.length !== 1 ? "s" : ""}
       </h2>
 
-      <div className="overflow-x-auto p-6">
+      <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
             <tr>
               <th>#</th>
-              <th>Model Name</th>
+              <th>Model</th>
               <th>Framework</th>
               <th>Dataset</th>
-              <th>Purchased</th>
-              <th>Actions</th>
+              <th>Action</th>
             </tr>
           </thead>
+
           <tbody>
-            {models.map((model, index) => (
+            {purchases.map((model, index) => (
               <tr key={model._id}>
                 <th>{index + 1}</th>
+
                 <td className="flex items-center gap-2">
                   <img
                     src={model.image}
                     alt={model.name}
                     className="w-10 h-10 object-cover rounded"
                   />
-                  {model.name}
+                  <span>{model.name}</span>
                 </td>
+
                 <td>{model.framework}</td>
                 <td>{model.dataset}</td>
-                <td>{model.purchased}</td>
-                <td className="flex gap-2">
+
+                <td>
                   <Link
                     to={`/models/${model._id}`}
                     className="btn btn-xs btn-primary"
@@ -70,6 +86,12 @@ const UserMyPurchases = () => {
             ))}
           </tbody>
         </table>
+
+        {purchases.length === 0 && (
+          <p className="text-center text-gray-500 mt-6">
+            No purchases found.
+          </p>
+        )}
       </div>
     </div>
   );

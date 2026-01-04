@@ -17,6 +17,7 @@ import DeshboardLayout from "../Layout/DeshboardLayout";
 import DeshboardHome from "../Pages/DeshboardHome";
 import UserMymodels from "../Components/useroverviews/UserMymodels";
 import UserMyPurchases from "../Components/useroverviews/UserMypuchage";
+import Profile from "../Pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
       {
         path: '/deshboard/purchases',
         element: <UserMyPurchases></UserMyPurchases>
+      },
+      {
+        path: '/deshboard/profile',
+        element: <Profile></Profile>
       }
       
     ]

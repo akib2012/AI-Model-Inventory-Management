@@ -4,16 +4,14 @@ import Authcontext from "../ContextAuth/Authcontext";
 import { toast } from "react-toastify";
 
 const Register = () => {
-  const { usersingup, googlesingup, updateprofile, setUser } = useContext(Authcontext);
+  const { usersingup, googlesingup, updateprofile, setUser } =
+    useContext(Authcontext);
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log("Testing location state:", location.state);
-
-  // Handle Email/Password Registration
-  const handleRegister = (e) => {
+  // Email/Password Registration
+  const handleRegister = async (e) => {
     e.preventDefault();
-
     const name = e.target.name.value;
     const email = e.target.email.value;
     const photo = e.target.photo.value;
@@ -29,88 +27,94 @@ const Register = () => {
       return;
     }
 
-    usersingup(email, password)
-      .then(() => {
-        // Update Firebase profile
-        updateprofile({ displayName: name, photoURL: photo })
-          .then(() => {
-            const userInfo = {
-              user_name: name,
-              user_mail: email,
-              user_photo: photo,
-              role: "user",
-              createdat: new Date(),
-            };
+    try {
+      // 1️⃣ Firebase signup
+      const result = await usersingup(email, password);
+      const user = result.user;
 
-            // Send user to backend
-            fetch("https://ai-model-inventory-manager-server-ten.vercel.app/users", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(userInfo),
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                console.log("Registered user:", data);
-                if (data._id || data.insertedId) {
-                  setUser(data);
-                  navigate(location.state?.from || "/");
-                  toast.success("Registered successfully!");
-                } else if (data.message === "user exists") {
-                  toast.error("User already exists!");
-                } else {
-                  toast.error("Something went wrong!");
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-                toast.error("Something went wrong!");
-              });
-          })
-          .catch((error) => console.log(error));
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Registration failed!");
-      });
+      // 2️⃣ Update Firebase profile
+      await updateprofile({ displayName: name, photoURL: photo });
+
+      // 3️⃣ Get Firebase token & save for backend JWT auth
+      const token = await user.getIdToken();
+      localStorage.setItem("access-token", token);
+
+      // 4️⃣ Send user info to backend
+      const userInfo = {
+        user_name: name,
+        user_mail: email,
+        user_photo: photo,
+        role: "user",
+        createdat: new Date(),
+      };
+
+      const res = await fetch(
+        "https://ai-model-inventory-manager-server-ten.vercel.app/users",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userInfo),
+        }
+      );
+      const data = await res.json();
+
+      if (data._id || data.insertedId) {
+        setUser(data);
+        navigate(location.state?.from || "/");
+        toast.success("Registered successfully!");
+      } else if (data.message === "user exists") {
+        toast.error("User already exists!");
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Registration failed!");
+    }
   };
 
   // Google Signup
-  const handleGoogleSignup = () => {
-    googlesingup()
-      .then((res) => {
-        const newUser = {
-          user_name: res.user.displayName,
-          user_mail: res.user.email,
-          user_photo: res.user.photoURL,
-        };
+  const handleGoogleSignup = async () => {
+    try {
+      const res = await googlesingup();
+      const user = res.user;
 
-        fetch("https://ai-model-inventory-manager-server-ten.vercel.app/users", {
+      // 1️⃣ Get Firebase token & save
+      const token = await user.getIdToken();
+      localStorage.setItem("access-token", token);
+
+      // 2️⃣ Prepare backend user data
+      const newUser = {
+        user_name: user.displayName,
+        user_mail: user.email,
+        user_photo: user.photoURL,
+        role: "user",
+        createdat: new Date(),
+      };
+
+      const response = await fetch(
+        "https://ai-model-inventory-manager-server-ten.vercel.app/users",
+        {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newUser),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log("Google signup user:", data);
-            if (data._id || data.insertedId) {
-              setUser(data);
-              navigate(location.state?.from || "/");
-              toast.success("Registered successfully!");
-            } else if (data.message === "user exists") {
-              toast.error("User already exists!");
-            } else {
-              toast.error("Something went wrong!");
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            toast.error("Something went wrong!");
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Google signup failed!");
-      });
+        }
+      );
+      const data = await response.json();
+
+      if (data._id || data.insertedId) {
+        setUser(data);
+        navigate(location.state?.from || "/");
+        toast.success("Registered successfully!");
+      } else if (data.message === "user exists") {
+        toast.error("User already exists!");
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Google signup failed!");
+    }
   };
 
   return (
@@ -145,7 +149,9 @@ const Register = () => {
 
           {/* Photo */}
           <div>
-            <label className="block mb-1 text-sm text-gray-300">Photo URL</label>
+            <label className="block mb-1 text-sm text-gray-300">
+              Photo URL
+            </label>
             <input
               type="url"
               required
@@ -173,7 +179,7 @@ const Register = () => {
           </button>
         </form>
 
-        <div className="my-5 text-gray-400 text-sm">or</div>
+        <div className="my-5 text-gray-400 text-sm text-center">or</div>
 
         <button
           onClick={handleGoogleSignup}
@@ -183,7 +189,7 @@ const Register = () => {
           Sign up with Google
         </button>
 
-        <p className="mt-5 text-gray-400 text-sm">
+        <p className="mt-5 text-gray-400 text-sm text-center">
           Already have an account?{" "}
           <Link
             to="/login"
