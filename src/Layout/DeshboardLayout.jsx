@@ -36,7 +36,7 @@ const DashboardLayout = () => {
             </label>
 
             <Link to="/" className="btn btn-ghost gap-2">
-              <FiHome />
+              <FiHome size={30}/>
               <span className="hidden text-2xl text-[#0F766E]  sm:inline">Home</span>
             </Link>
           </div>
@@ -54,11 +54,11 @@ const DashboardLayout = () => {
                 tabIndex={0}
                 className="menu dropdown-content mt-3 w-44 bg-base-100 shadow rounded-box"
               >
-                <li>
+                {/* <li>
                   <Link to="/deshboard/profile">
                     <FiUser /> Profile
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/deshboard">
                     <FiHome /> Dashboard Home

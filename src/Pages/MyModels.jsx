@@ -5,79 +5,73 @@ import { toast } from "react-toastify";
 import { Link } from "react-router";
 
 const MyModels = () => {
-  const { user, loading, setLoading } = useContext(Authcontext);
+  const { user } = useContext(Authcontext);
+
   const [mymodel, setMymodel] = useState([]);
-  console.log(mymodel);
-  //   console.log(user?.email);
+  const [pageLoading, setPageLoading] = useState(true); // ✅ LOCAL loading
 
   useEffect(() => {
+    if (!user?.email || !user?.accessToken) return;
+
+    setPageLoading(true);
+
     fetch(
-      `https://ai-model-inventory-manager-server-ten.vercel.app/my-models?email=${user.email}`,
+      `https://ai-model-inventory-manager-server-dusky.vercel.app/my-models`,
       {
         headers: {
-          authorization: `Bearer ${user?.accessToken}`,
+          authorization: `Bearer ${user.accessToken}`,
         },
       }
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        // toast.success("submit your model")
-        setMymodel(data);
-        setLoading(false);
+        setMymodel(data.models || []);
       })
-      .catch((err) => console.error("Error fetching models:", err));
-  }, [user?.email, setLoading, setMymodel, user?.accessToken]);
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to load models");
+      })
+      .finally(() => {
+        setPageLoading(false);
+      });
+  }, [user?.email, user?.accessToken]); // ✅ SAFE deps
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  if (pageLoading) return <LoadingSpinner />;
 
   return (
     <div className="max-w-10/12 m-auto rounded-2xl my-6 px-4">
       <h4 className="text-center text-3xl font-bold py-6 text-[#0F766E]">
-        My Model{" "}
+        My Models
       </h4>
 
       {mymodel.length === 0 ? (
-        <div>
-          <h3 className="text-center text-2xl text-[#0F766E]">No model found 😢</h3>
-        </div>
+        <h3 className="text-center text-2xl text-[#0F766E]">
+          No model found 😢
+        </h3>
       ) : (
         mymodel.map((model) => (
           <div key={model._id} className="my-4">
-            <div className="rounded-2xl flex flex-col sm:flex-row sm:items-center border border-gray-700 p-4 bg-gray-900 text-gray-100 gap-4 sm:gap-6">
-              {/* Image */}
-              <div className="w-full sm:w-20 h-32 sm:h-16 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
+            <div className="rounded-2xl flex flex-col sm:flex-row sm:items-center border border-gray-700 p-4 bg-gray-900 text-gray-100 gap-4">
+              <div className="w-full sm:w-20 h-32 sm:h-16 bg-gray-800 rounded-lg overflow-hidden">
                 <img
                   src={model.image}
                   alt={model.name}
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-full object-cover"
                 />
               </div>
 
-              {/* Model Info */}
-              <div className="flex-1 grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-6 text-center sm:text-left">
-                <div className="font-semibold text-lg sm:text-base">
-                  {model.name}
-                </div>
-                <div className="text-gray-300">{model.framework}</div>
-                <div className="text-gray-300">{model.useCase}</div>
-                <div className="text-gray-300">{model.createdBy}</div>
+              <div className="flex-1 grid sm:grid-cols-4 gap-4">
+                <div className="font-semibold">{model.name}</div>
+                <div>{model.framework}</div>
+                <div>{model.useCase}</div>
+                <div>{model.createdBy}</div>
               </div>
 
-              {/* View Button */}
-              <div className="flex justify-center sm:justify-end">
-                <Link to={`/models/${model._id}`}>
-                  <button
-                    data-ripple-light="true"
-                    type="button"
-                    className="select-none rounded-lg bg-blue-500 py-2.5 px-5 text-center font-sans text-sm font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-90 active:opacity-85 disabled:opacity-50"
-                  >
-                    View Details
-                  </button>
-                </Link>
-              </div>
+              <Link to={`/models/${model._id}`}>
+                <button className="bg-blue-500 px-5 py-2 rounded-lg font-bold">
+                  View Details
+                </button>
+              </Link>
             </div>
           </div>
         ))

@@ -32,6 +32,10 @@ const Header = () => {
       <li><NavLink to="/">Home</NavLink></li>
       <li><NavLink to="/addmodel">Add Model</NavLink></li>
       <li><NavLink to="/viewsallmodels">View Model</NavLink></li>
+      <li><NavLink to="/privecy policy">PrivacyPolicy</NavLink></li>
+      <li><NavLink to="/About">About us</NavLink></li>
+
+
 
       {user && (
         <>

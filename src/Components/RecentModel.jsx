@@ -10,7 +10,7 @@ const RecentModel = () => {
 
   useEffect(() => {
     fetch(
-      "https://ai-model-inventory-manager-server-ten.vercel.app/recent-model"
+      "https://ai-model-inventory-manager-server-dusky.vercel.app/recent-model"
     )
       .then((res) => res.json())
       .then((data) => {

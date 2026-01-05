@@ -49,7 +49,7 @@ const Register = () => {
       };
 
       const res = await fetch(
-        "https://ai-model-inventory-manager-server-ten.vercel.app/users",
+        "https://ai-model-inventory-manager-server-dusky.vercel.app/users",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -93,7 +93,7 @@ const Register = () => {
       };
 
       const response = await fetch(
-        "https://ai-model-inventory-manager-server-ten.vercel.app/users",
+        "https://ai-model-inventory-manager-server-dusky.vercel.app/users",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

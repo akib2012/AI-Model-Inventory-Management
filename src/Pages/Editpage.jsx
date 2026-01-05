@@ -1,59 +1,64 @@
 import React, { useContext, useEffect, useState } from "react";
-import Authcontext from "../ContextAuth/Authcontext";
 import { useNavigate, useParams } from "react-router";
+import Authcontext from "../ContextAuth/Authcontext";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import { toast } from "react-toastify";
 
 const Editpage = () => {
   const { id } = useParams();
-  const [model, setModel] = useState({});
-  const [loading, setLoading] = useState(true);
-  const { user } = useContext(Authcontext);
   const navigate = useNavigate();
+  const { user } = useContext(Authcontext);
 
-  // Fetch model data
+  const [model, setModel] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // 🔹 Fetch model once
   useEffect(() => {
     if (!user?.accessToken) return;
 
     setLoading(true);
+
     fetch(
-      `https://ai-model-inventory-manager-server-ten.vercel.app/models/${id}`,
+      `https://ai-model-inventory-manager-server-dusky.vercel.app/models/${id}`,
       {
         headers: {
           authorization: `Bearer ${user.accessToken}`,
         },
       }
     )
-      .then((res) => res.json())
-      .then((data) => {
-        setModel(data);
-        setLoading(false);
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch model");
+        return res.json();
       })
-      .catch(() => setLoading(false));
-  }, [id, user]);
+      .then((data) => setModel(data))
+      .catch(() => toast.error("❌ Failed to load model"))
+      .finally(() => setLoading(false));
+  }, [id, user?.accessToken]);
 
-  // Handle form submit
-  const handledit = (e) => {
+  // 🔹 Submit update
+  const handleEdit = (e) => {
     e.preventDefault();
 
-    const newModel = {
-      name: e.target.modelname.value,
-      framework: e.target.framework.value,
-      useCase: e.target.usecase.value,
-      dataset: e.target.dataset.value,
-      image: e.target.modelimg.value,
-      description: e.target.description.value,
-      createdBy: user.email,
-      createdAt: new Date(),
-      purchased: model.purchased || 0,
+    const form = e.target;
+
+    const updatedModel = {
+      name: form.modelname.value.trim(),
+      framework: form.framework.value.trim(),
+      useCase: form.usecase.value.trim(),
+      dataset: form.dataset.value.trim(),
+      image: form.modelimg.value.trim(),
+      description: form.description.value.trim(),
     };
 
     fetch(
-      `https://ai-model-inventory-manager-server-ten.vercel.app/models/${id}`,
+      `https://ai-model-inventory-manager-server-dusky.vercel.app/models/${id}`,
       {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newModel),
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${user.accessToken}`, // 🔥 IMPORTANT
+        },
+        body: JSON.stringify(updatedModel),
       }
     )
       .then((res) => res.json())
@@ -62,137 +67,127 @@ const Editpage = () => {
           toast.success("✅ Model updated successfully!");
           navigate(`/models/${id}`);
         } else {
-          toast.warning("⚠️ No changes detected.");
+          toast.info("ℹ️ No changes detected");
         }
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("❌ Update failed!");
-      });
+      .catch(() => toast.error("❌ Update failed"));
   };
 
-  // Show spinner if still loading
-  if (loading) {
+  // 🔹 Loading state
+  if (loading || !model) {
     return <LoadingSpinner />;
   }
 
-  const { name, image, purchased, useCase, description, framework, dataset } =
-    model;
-
   return (
-    <div>
-      <h3 className="text-center text-2xl font-bold text-white mb-6">
-        Edit Model Page
-      </h3>
+    <div className="min-h-screen flex justify-center items-center px-4">
+      <div className="w-full max-w-2xl bg-[#1E293B]/80 backdrop-blur-xl border border-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.6)] rounded-2xl p-8 text-gray-200">
 
-      <div className="my-17  bg-[#1E293B]/80 backdrop-blur-xl border-2 border-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.6)] rounded-2xl p-8 w-full max-w-2xl text-gray-200 mx-auto transition-all duration-300 hover:shadow-[0_0_15px_rgba(251,191,36,0.9)]">
-        <h1 className="text-3xl font-bold text-[#6C63FF] text-center mb-6">
-          Edit Model
-        </h1>
+        <h2 className="text-3xl font-bold text-center text-[#6C63FF] mb-8">
+          ✏️ Edit Model
+        </h2>
 
-        <form onSubmit={handledit} className="space-y-6">
-          {/* Image URL */}
-          <div className="border-2 border-indigo-400 rounded-xl p-4 flex flex-col items-center justify-center bg-[#0F172A]/50">
-            <label className="text-gray-300 mb-2 font-semibold">
-              Model Image
-            </label>
+        <form onSubmit={handleEdit} className="space-y-5">
+
+          {/* Image */}
+          <div>
+            <label className="font-semibold">Model Image URL</label>
             <input
-              type="text"
-              defaultValue={image}
-              placeholder="Enter image URL"
+              defaultValue={model.image}
               name="modelimg"
-              className="w-full px-3 py-2 rounded-lg bg-transparent border border-gray-500 focus:border-indigo-400 outline-none"
+              type="text"
+              required
+              className="w-full mt-1 px-3 py-2 rounded-lg bg-transparent border border-gray-500 focus:border-indigo-400 outline-none"
             />
           </div>
 
-          {/* Model Name */}
+          {/* Name */}
           <div>
-            <label className="text-gray-300 font-semibold">Model Name</label>
+            <label className="font-semibold">Model Name</label>
             <input
-              defaultValue={name}
-              type="text"
-              placeholder="Enter model name"
+              defaultValue={model.name}
               name="modelname"
-              className="w-full mt-1 px-3 py-2 rounded-lg bg-[#0F172A]/60 border border-gray-600 focus:border-indigo-400 outline-none"
+              type="text"
+              required
+              className="w-full mt-1 px-3 py-2 rounded-lg bg-transparent border border-gray-500 focus:border-indigo-400 outline-none"
             />
           </div>
 
           {/* Framework & Use Case */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-gray-300 font-semibold">Framework</label>
+              <label className="font-semibold">Framework</label>
               <input
-                type="text"
-                defaultValue={framework}
-                placeholder="e.g., TensorFlow"
+                defaultValue={model.framework}
                 name="framework"
-                className="w-full mt-1 px-3 py-2 rounded-lg bg-[#0F172A]/60 border border-gray-600 focus:border-indigo-400 outline-none"
+                type="text"
+                required
+                className="w-full mt-1 px-3 py-2 rounded-lg bg-transparent border border-gray-500 focus:border-indigo-400 outline-none"
               />
             </div>
+
             <div>
-              <label className="text-gray-300 font-semibold">Use Case</label>
+              <label className="font-semibold">Use Case</label>
               <input
-                type="text"
-                defaultValue={useCase}
-                placeholder="e.g., Object Detection"
+                defaultValue={model.useCase}
                 name="usecase"
-                className="w-full mt-1 px-3 py-2 rounded-lg bg-[#0F172A]/60 border border-gray-600 focus:border-indigo-400 outline-none"
+                type="text"
+                required
+                className="w-full mt-1 px-3 py-2 rounded-lg bg-transparent border border-gray-500 focus:border-indigo-400 outline-none"
               />
             </div>
           </div>
 
-          {/* Dataset & Purchased */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-gray-300 font-semibold">Dataset</label>
-              <input
-                type="text"
-                defaultValue={dataset}
-                name="dataset"
-                placeholder="e.g., COCO"
-                className="w-full mt-1 px-3 py-2 rounded-lg bg-[#0F172A]/60 border border-gray-600 focus:border-indigo-400 outline-none"
-              />
-            </div>
-            <div>
-              <label className="text-gray-300 font-semibold">
-                Purchased Count
-              </label>
-              <input
-                readOnly
-                value={purchased || 0}
-                className="w-full mt-1 px-3 py-2 rounded-lg bg-[#0F172A]/60 border border-gray-600 text-gray-400 outline-none cursor-not-allowed"
-              />
-            </div>
+          {/* Dataset */}
+          <div>
+            <label className="font-semibold">Dataset</label>
+            <input
+              defaultValue={model.dataset}
+              name="dataset"
+              type="text"
+              className="w-full mt-1 px-3 py-2 rounded-lg bg-transparent border border-gray-500 focus:border-indigo-400 outline-none"
+            />
+          </div>
+
+          {/* Purchased (readonly) */}
+          <div>
+            <label className="font-semibold">Purchased Count</label>
+            <input
+              value={model.dowloded_by?.length || 0}
+              readOnly
+              className="w-full mt-1 px-3 py-2 rounded-lg bg-gray-700/50 border border-gray-600 text-gray-400 cursor-not-allowed"
+            />
           </div>
 
           {/* Description */}
           <div>
-            <label className="text-gray-300 font-semibold">Description</label>
+            <label className="font-semibold">Description</label>
             <textarea
-              rows="4"
-              defaultValue={description}
+              defaultValue={model.description}
               name="description"
-              placeholder="Enter model description..."
-              className="w-full mt-1 px-3 py-2 rounded-lg bg-[#0F172A]/60 border border-gray-600 focus:border-indigo-400 outline-none"
-            ></textarea>
+              rows="4"
+              required
+              className="w-full mt-1 px-3 py-2 rounded-lg bg-transparent border border-gray-500 focus:border-indigo-400 outline-none"
+            />
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-between items-center mt-6">
+          <div className="flex justify-between mt-6">
             <button
               type="submit"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-xl font-semibold shadow-lg transition-all"
+              className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 rounded-xl font-semibold shadow-lg"
             >
               Save Changes
             </button>
+
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-5 py-2 rounded-xl font-semibold transition-all"
+              className="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold"
             >
               Cancel
             </button>
           </div>
+
         </form>
       </div>
     </div>

@@ -3,10 +3,11 @@ import { Link } from "react-router";
 import Authcontext from "../ContextAuth/Authcontext";
 import LoadingSpinner from "../Components/LoadingSpinner";
 
-
 const UserMyPurchases = () => {
-  const { user, loading, setLoading } = useContext(Authcontext);
+  const { user } = useContext(Authcontext);
+
   const [purchase, setPurchase] = useState([]);
+  const [loading, setLoading] = useState(true); // ✅ local loading
 
   useEffect(() => {
     if (!user?.email || !user?.accessToken) return;
@@ -14,27 +15,25 @@ const UserMyPurchases = () => {
     setLoading(true);
 
     fetch(
-      `https://ai-model-inventory-manager-server-ten.vercel.app/my-Purchase?email=${user.email}`,
+      `https://ai-model-inventory-manager-server-dusky.vercel.app/my-Purchase`,
       {
         headers: {
           authorization: `Bearer ${user.accessToken}`,
         },
       }
     )
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch purchases");
+        return res.json();
+      })
       .then((data) => {
-        console.log("Purchase API response 👉", data);
-
-        
         setPurchase(data.models || []);
-
-        setLoading(false);
       })
       .catch((err) => {
         console.error("Error fetching purchases:", err);
-        setLoading(false);
-      });
-  }, [user?.email, user?.accessToken, setLoading]);
+      })
+      .finally(() => setLoading(false));
+  }, [user?.email, user?.accessToken]);
 
   if (loading) {
     return <LoadingSpinner />;

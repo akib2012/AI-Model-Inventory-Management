@@ -18,6 +18,8 @@ import DeshboardHome from "../Pages/DeshboardHome";
 import UserMymodels from "../Components/useroverviews/UserMymodels";
 import UserMyPurchases from "../Components/useroverviews/UserMypuchage";
 import Profile from "../Pages/Profile";
+import PrivacyPolicy from "../Components/PrivacyPolicy";
+import About from "../Components/About";
 
 const router = createBrowserRouter([
   {
@@ -39,11 +41,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/models/:id",
-        // loader: ({params}) => fetch(`https://ai-model-inventory-manager-server-ten.vercel.app/models/${params.id}`),
-        element: (
-          
-            <ModelDetils></ModelDetils>
-        ),
+        // loader: ({params}) => fetch(`https://ai-model-inventory-manager-server-dusky.vercel.app/models/${params.id}`),
+        element: <ModelDetils></ModelDetils>,
       },
       {
         path: "/addmodel",
@@ -58,7 +57,7 @@ const router = createBrowserRouter([
         path: "/viewsallmodels",
         loader: () =>
           fetch(
-            "https://ai-model-inventory-manager-server-ten.vercel.app/models"
+            "https://ai-model-inventory-manager-server-dusky.vercel.app/models"
           ),
         element: <ViewsAllModels></ViewsAllModels>,
       },
@@ -80,6 +79,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: '/privecypolicy',
+        element: <PrivacyPolicy></PrivacyPolicy>
+      },
+      {
+        path: '/About',
+        element: <About></About>
+      },
+      {
         path: "/edit-page/:id",
         element: (
           <PrivateRoute>
@@ -94,32 +101,31 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path:"/deshboard",
-    element: <PrivateRoute><DeshboardLayout></DeshboardLayout></PrivateRoute>,
+    path: "/deshboard",
+    element: (
+      <PrivateRoute>
+        <DeshboardLayout></DeshboardLayout>
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
         element: <DeshboardHome></DeshboardHome>,
-        
-       
       },
       {
-        path: '/deshboard/my-models',
-        element: <UserMymodels></UserMymodels>
+        path: "/deshboard/my-models",
+        element: <UserMymodels></UserMymodels>,
       },
       {
-        path: '/deshboard/purchases',
-        element: <UserMyPurchases></UserMyPurchases>
+        path: "/deshboard/purchases",
+        element: <UserMyPurchases></UserMyPurchases>,
       },
       {
-        path: '/deshboard/profile',
-        element: <Profile></Profile>
-      }
-      
-    ]
-
-
-  }
+        path: "/deshboard/profile",
+        element: <Profile></Profile>,
+      },
+    ],
+  },
 ]);
 
 export default router;

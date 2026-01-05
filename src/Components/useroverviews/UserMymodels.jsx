@@ -14,7 +14,7 @@ const UserMymodels = () => {
         const token = await user.getIdToken(); // Firebase JWT
 
         // Fetch user's models
-        const res = await fetch("http://localhost:3000/my-models", {
+        const res = await fetch("https://ai-model-inventory-manager-server-dusky.vercel.app/my-models", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -22,7 +22,7 @@ const AddnewModel = () => {
       purchased: 0,
     };
 
-    fetch("https://ai-model-inventory-manager-server-ten.vercel.app/models", {
+    fetch("https://ai-model-inventory-manager-server-dusky.vercel.app/models", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataObject),
@@ -44,18 +44,18 @@ const AddnewModel = () => {
     <div className="flex justify-center items-center px-4 py-16 min-h-screen">
       {/* Main Container with subtle outer glow */}
       <div className="relative w-full max-w-3xl group">
-        
         {/* Animated Neon Border Effect */}
         <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0F766E] via-[#0528F2] to-[#0F766E] rounded-[2.5rem] blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
 
         {/* The Card */}
         <div className="relative bg-[#0a0a0a] border border-white/10 rounded-[2.5rem] shadow-2xl p-8 md:p-12 overflow-hidden">
-          
           {/* Subtle internal gradient overlay */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#2DD4BF] to-transparent opacity-50"></div>
 
           <div className="text-center mb-10">
-            <h2 className="text-sm uppercase tracking-[0.3em] text-[#2DD4BF] font-bold mb-2">System Entry</h2>
+            <h2 className="text-sm uppercase tracking-[0.3em] text-[#2DD4BF] font-bold mb-2">
+              System Entry
+            </h2>
             <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">
               Add <span className="text-[#0528F2]">AI</span> Model
             </h1>
@@ -111,8 +111,12 @@ const AddnewModel = () => {
 
             {/* Creator Badge (Enhanced) */}
             <div className="flex items-center justify-between px-6 py-4 rounded-2xl bg-white/5 border border-white/5">
-              <span className="text-white/40 text-xs font-bold uppercase tracking-tighter">Creator Account</span>
-              <span className="text-[#2DD4BF] font-mono text-sm">{user?.email}</span>
+              <span className="text-white/40 text-xs font-bold uppercase tracking-tighter">
+                Creator Account
+              </span>
+              <span className="text-[#2DD4BF] font-mono text-sm">
+                {user?.email}
+              </span>
             </div>
 
             {/* Powerful Submit Button */}

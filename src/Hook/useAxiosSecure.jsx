@@ -1,4 +1,4 @@
-// https://ai-model-inventory-manager-server-ten.vercel.app
+// https://ai-model-inventory-manager-server-dusky.vercel.app
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
@@ -6,7 +6,7 @@ import useAuth from "./useAuth";
 // import useAuth from "./useAuth";
 
 const axiosInstance = axios.create({
-  baseURL: "https://ai-model-inventory-manager-server-ten.vercel.app",
+  baseURL: "https://ai-model-inventory-manager-server-dusky.vercel.app",
   // baseURL: "http://localhost:3000",
   withCredentials: true,
 });
@@ -53,5 +53,3 @@ const useAxiosSecure = () => {
   return axiosInstance;
 };
 export default useAxiosSecure;
-
-

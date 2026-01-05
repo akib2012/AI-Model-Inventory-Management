@@ -10,31 +10,33 @@ const UserMyPurchases = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.accessToken || !user?.email) return;
+    if (!user?.accessToken) return;
 
     setLoading(true);
 
-    fetch(
-      `https://ai-model-inventory-manager-server-ten.vercel.app/my-Purchase?email=${user.email}`,
-      {
-        headers: {
-          authorization: `Bearer ${user.accessToken}`,
-        },
-      }
-    )
-      .then((res) => res.json())
+    fetch(`https://ai-model-inventory-manager-server-dusky.vercel.app/my-Purchase`, {
+      headers: {
+        authorization: `Bearer ${user.accessToken}`,
+      },
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`HTTP ${res.status}: ${text}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         console.log("Purchase API response >>", data);
-
-        
-        setPurchases(data);
+        // Use the models array from the response
+        setPurchases(data.models || []);
         setLoading(false);
       })
       .catch((err) => {
         console.error("Error fetching purchases:", err);
         setLoading(false);
       });
-  }, [user?.accessToken, user?.email]);
+  }, [user?.accessToken]);
 
   if (loading) return <LoadingSpinner />;
 
@@ -61,19 +63,18 @@ const UserMyPurchases = () => {
             {purchases.map((model, index) => (
               <tr key={model._id}>
                 <th>{index + 1}</th>
-
                 <td className="flex items-center gap-2">
-                  <img
-                    src={model.image}
-                    alt={model.name}
-                    className="w-10 h-10 object-cover rounded"
-                  />
+                  {model.image && (
+                    <img
+                      src={model.image}
+                      alt={model.name}
+                      className="w-10 h-10 object-cover rounded"
+                    />
+                  )}
                   <span>{model.name}</span>
                 </td>
-
                 <td>{model.framework}</td>
                 <td>{model.dataset}</td>
-
                 <td>
                   <Link
                     to={`/models/${model._id}`}
@@ -88,9 +89,7 @@ const UserMyPurchases = () => {
         </table>
 
         {purchases.length === 0 && (
-          <p className="text-center text-gray-500 mt-6">
-            No purchases found.
-          </p>
+          <p className="text-center text-gray-500 mt-6">No purchases found.</p>
         )}
       </div>
     </div>
